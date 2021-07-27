@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import SigaaService from 'App/Services/SigaaService'
 
-export default class DashboardController {
+export default class LinksController {
   private sigaaService: SigaaService
 
   constructor() {
@@ -9,14 +9,23 @@ export default class DashboardController {
   }
 
   public async index({ view, session }: HttpContextContract) {
-    console.log(session.all())
+    const accessToken = session.get('access_token')
+    const userId = 382660
 
-    return view.render('dashboard')
+    const links = await this.sigaaService.getLinks(accessToken, userId)
+
+    return view.render('links', { links })
   }
 
   public async create({}: HttpContextContract) {}
 
-  public async store({}: HttpContextContract) {}
+  public async store({ request, response, session }: HttpContextContract) {
+    const linkId = request.body()['id-vinculo']
+
+    session.put('id-vinculo', linkId)
+
+    response.redirect('/dashboard')
+  }
 
   public async show({}: HttpContextContract) {}
 

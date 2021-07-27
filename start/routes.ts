@@ -20,18 +20,12 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async ({ view }) => {
-  const url =
-    `${process.env.SIGAA_AUTH_URI}/authz-server/oauth/authorize?` +
-    `client_id=${process.env.SIGAA_CLIENT_ID}&` +
-    `response_type=code&` +
-    `redirect_uri=${process.env.CALLBACK_URI}`
-
-  return view.render('welcome', {
-    url,
-  })
-})
-
+Route.get('/', 'AuthenticationController.index')
 Route.get('/callback', 'AuthenticationController.create')
 
+Route.get('/links', 'LinksController.index')
+Route.post('/links', 'LinksController.store')
+
 Route.get('/dashboard', 'DashboardController.index')
+
+Route.post('/tasks', 'TasksController.store')
